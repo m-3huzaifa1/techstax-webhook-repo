@@ -3,3 +3,7 @@ pymongo
 dnspython
 python-dotenv
 pytz
+gunicorn 
+dotenv
+bson
+datetime
