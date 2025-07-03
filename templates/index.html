@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Webhook Activity</title>
+  <script>
+    function loadUpdates() {
+      fetch('/get-updates')
+        .then(res => res.json())
+        .then(data => {
+          const log = document.getElementById('log');
+          log.innerHTML = '';
+          data.forEach(entry => {
+            let msg = '';
+            if (entry.type === 'push') {
+              msg = `${entry.author} pushed to ${entry.to_branch} on ${entry.timestamp}`;
+            } else if (entry.type === 'pull_request') {
+              msg = `${entry.author} submitted a pull request from ${entry.from_branch} to ${entry.to_branch} on ${entry.timestamp}`;
+            } else if (entry.type === 'merge') {
+              msg = `${entry.author} merged branch ${entry.from_branch} to ${entry.to_branch} on ${entry.timestamp}`;
+            }
+            log.innerHTML += `<p>${msg}</p>`;
+          });
+        });
+    }
+
+    setInterval(loadUpdates, 15000);
+    window.onload = loadUpdates;
+  </script>
+</head>
+<body>
+  <h2>Latest GitHub Activity</h2>
+  <div id="log"></div>
+</body>
+</html>
