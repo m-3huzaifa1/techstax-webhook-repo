@@ -24,6 +24,7 @@ def webhook():
     if event_type == "push":
         data = {
             "type": "push",
+            "request_id": payload.get("head_commit", {}).get("id", "unknown"),
             "author": payload["pusher"]["name"],
             "to_branch": payload["ref"].split("/")[-1],
             "timestamp": timestamp
@@ -32,6 +33,7 @@ def webhook():
         pr = payload["pull_request"]
         data = {
             "type": "pull_request",
+            "request_id": pr.get("head", {}).get("sha", "unknown"),
             "author": pr["user"]["login"],
             "from_branch": pr["head"]["ref"],
             "to_branch": pr["base"]["ref"],
@@ -41,6 +43,7 @@ def webhook():
         pr = payload["merge_group"]
         data = {
             "type": "merge",
+            "request_id": pr.get("head", {}).get("sha", "unknown"),
             "author": payload["sender"]["login"],
             "from_branch": pr["head"]["ref"],
             "to_branch": pr["base"]["ref"],
